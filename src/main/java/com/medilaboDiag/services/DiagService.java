@@ -26,23 +26,48 @@ public class DiagService {
 		long age = getAge(patient.getDate_de_naissance());
 		String patientGenre = patient.getGenre();
 		List<String> declencheursList = noteProxy.getPatientNotesContaining(name);
+
 		int countDeclencheurs = declencheursList.size();
-		int seuil = 30;
-		if (age > seuil && countDeclencheurs >= 2 && countDeclencheurs <= 5)
-			return "borderline";
-		else if (age < seuil && ((patientGenre.equals("M") && countDeclencheurs >= 3 && countDeclencheurs < 5)
-				|| (patientGenre.equals("F") && countDeclencheurs >= 4 && countDeclencheurs < 7)))
-			return "in danger";
-		else if (age > seuil && (countDeclencheurs == 6 || countDeclencheurs == 7))
-			return "in danger";
-		else if (age < seuil && patientGenre.equals("M") && countDeclencheurs >= 5)
-			return "Early onset";
-		else if (age < seuil && patientGenre.equals("F") && countDeclencheurs >= 7)
-			return "Early onset";
-		else if (age > seuil && countDeclencheurs >= 8)
-			return "Early onset";
+		final String GENREM = "M";
+		final String GENREF = "F";
+		int ageSeuilDetection = 30;
+		final int MINDECLENCHEURBORDERLINE = 2;
+		final int MAXDECLENCHEURBORDERLINE = 5;
+		final int MINDECLENCHEURDANGERM = 3;
+		final int MAXDECLENCHEURDANGERM = 5;
+		final int MINDECLENCHEURDANGERF = 4;
+		final int MAXDECLENCHEURDANGERF = 7;
+		final int MINDECLENCHEURDANGER_SUP_AGESEUIL = 6;
+		final int MAXDECLENCHEURDANGER_SUP_AGESEUIL = 7;
+		final int DECLENCHEUREARLYONSETM = 5;
+		final int DECLENCHEUREARLYONSETF = 7;
+		final int MINDECLENCHEUREARLYONSET = 8;
+
+		if (age > ageSeuilDetection && countDeclencheurs >= MINDECLENCHEURBORDERLINE
+				&& countDeclencheurs <= MAXDECLENCHEURBORDERLINE)
+			return NiveauxRisque.borderline.toString();
+
+		else if (age < ageSeuilDetection && ((patientGenre.equals(GENREM) && countDeclencheurs >= MINDECLENCHEURDANGERM
+				&& countDeclencheurs < MAXDECLENCHEURDANGERM)
+				|| (patientGenre.equals(GENREF) && countDeclencheurs >= MINDECLENCHEURDANGERF
+						&& countDeclencheurs < MAXDECLENCHEURDANGERF)))
+			return NiveauxRisque.in_danger.toString();
+
+		else if (age > ageSeuilDetection && (countDeclencheurs == MINDECLENCHEURDANGER_SUP_AGESEUIL
+				|| countDeclencheurs == MAXDECLENCHEURDANGER_SUP_AGESEUIL))
+			return NiveauxRisque.in_danger.toString();
+
+		else if (age < ageSeuilDetection && patientGenre.equals(GENREM) && countDeclencheurs >= DECLENCHEUREARLYONSETM)
+			return NiveauxRisque.early_onset.toString();
+
+		else if (age < ageSeuilDetection && patientGenre.equals(GENREF) && countDeclencheurs >= DECLENCHEUREARLYONSETF)
+			return NiveauxRisque.early_onset.toString();
+
+		else if (age > ageSeuilDetection && countDeclencheurs >= MINDECLENCHEUREARLYONSET)
+			return NiveauxRisque.early_onset.toString();
+
 		else
-			return "none";
+			return NiveauxRisque.none.toString();
 	}
 
 	public long getAge(Date dateBirth) {
