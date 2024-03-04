@@ -27,10 +27,10 @@ public class DiagController {
 	@Autowired
 	DiagService diagService;
 
-	@GetMapping("/risque/{name}")
-	public String getRisque(@PathVariable("name") String name) {
+	@GetMapping("/risque/{id}")
+	public String getRisque(@PathVariable("id") Integer id) {
 
-		return diagService.getRisque(name);
+		return diagService.getRisque(id);
 
 	}
 }

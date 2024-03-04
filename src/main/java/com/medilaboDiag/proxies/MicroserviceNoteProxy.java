@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import com.medilaboDiag.beans.NoteBean;
 
@@ -19,7 +18,7 @@ public interface MicroserviceNoteProxy {
 	@GetMapping("/notes/{id}")
 	public List<NoteBean> getPatientNotes(@PathVariable("id") Integer id);
 
-	@GetMapping("/notes/custom")
-	public List<String> getPatientNotesContaining(@RequestParam String patient);
+	@GetMapping("/notes/declencheurs/{patient}")
+	public List<String> getPatientNotesContaining(@PathVariable("patient") String patient);
 
 }
